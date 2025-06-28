@@ -3,7 +3,7 @@ version: '3.9'
 services:
   postgres:
     image: postgres:15
-    container_name: postgres
+    container_name: banco-postgres-tppe
     restart: unless-stopped
     environment:
       POSTGRES_USER: postgres
