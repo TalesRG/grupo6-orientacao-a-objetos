@@ -1,14 +1,11 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity('locatarios')
-export class LocatarioOrmEntity {
+@Entity('usuarios')
+export class AdministradorOrmEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
   @Column()
   email: string;
   @Column()
-  celular: string;
-
-  @Column()
-  tipo: string;
+  senha: string;
 }

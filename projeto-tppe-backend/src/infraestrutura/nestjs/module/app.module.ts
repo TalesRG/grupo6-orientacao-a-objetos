@@ -2,8 +2,14 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import databaseConfig from '../../database/database.config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { AdminModule } from './admin.module';
+import { LocatarioModule } from './locatario.module';
+import { LocatarioOrmEntity } from '../../../adapters/repository/locatarioOrm.entity';
+import { PessoaFisicaOrmEntity } from '../../../adapters/repository/pessoaFisicaOrm.entity';
 @Module({
   imports: [
+    AdminModule,
+    LocatarioModule,
     ConfigModule.forRoot({
       isGlobal: true,
       load: [databaseConfig],
@@ -18,7 +24,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
         username: configService.get<string>('database.username'),
         password: configService.get<string>('database.password'),
         database: configService.get<string>('database.database'),
-        entities: [__dirname + '/**/*.entity.{ts,js}'],
+        entities: [LocatarioOrmEntity, PessoaFisicaOrmEntity],
         synchronize: true,
       }),
     }),
