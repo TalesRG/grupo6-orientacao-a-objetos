@@ -6,6 +6,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { LocatarioServiceImpl } from './locatario.impl';
 import { CriarLocatarioDto } from '../../service/locatario/dto/criarLocatario.dto';
+import { TipoLocatarioEnum } from '../../service/locatario/enum/tipoLocatario.enum';
 
 @Injectable()
 export class PessoaFisicaServiceImpl implements PessoaFisicaService {
@@ -18,12 +19,12 @@ export class PessoaFisicaServiceImpl implements PessoaFisicaService {
   async criarPessoaFisica(
     pessoaFisicaDto: CriarLocatarioPessoaFisicaDto,
   ): Promise<PessoaFisicaOrmEntity> {
-    const { cpf, email, nome, celular, tipo } = pessoaFisicaDto;
+    const { cpf, email, nome, celular } = pessoaFisicaDto;
 
     const locatarioDto: CriarLocatarioDto = {
       email,
       celular,
-      tipo,
+      tipo: TipoLocatarioEnum.PESSOA_FISICA,
     };
 
     const locatarioEntity =
@@ -34,6 +35,10 @@ export class PessoaFisicaServiceImpl implements PessoaFisicaService {
       nome: nome,
       cpf: cpf,
     });
-    return this.pessoaFisicaRepository.save(pessoaFisicaEntity);
+
+    await this.pessoaFisicaRepository.save(pessoaFisicaEntity);
+    return await this.pessoaFisicaRepository.findOne({
+      where: { idLocatario: pessoaFisicaEntity.idLocatario },
+    });
   }
 }

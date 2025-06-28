@@ -6,7 +6,7 @@ export class PessoaFisicaOrmEntity {
   @PrimaryColumn()
   idLocatario: string;
 
-  @OneToOne(() => LocatarioOrmEntity)
+  @OneToOne(() => LocatarioOrmEntity, { eager: true })
   @JoinColumn({ name: 'idLocatario' })
   locatario: LocatarioOrmEntity;
 
