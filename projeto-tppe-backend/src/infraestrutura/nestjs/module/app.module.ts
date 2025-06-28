@@ -6,6 +6,7 @@ import { AdminModule } from './admin.module';
 import { LocatarioModule } from './locatario.module';
 import { LocatarioOrmEntity } from '../../../adapters/repository/locatarioOrm.entity';
 import { PessoaFisicaOrmEntity } from '../../../adapters/repository/pessoaFisicaOrm.entity';
+import { PessoaJuridicaOrmEntity } from '../../../adapters/repository/pessoaJuridicaOrm.entity';
 @Module({
   imports: [
     AdminModule,
@@ -24,7 +25,11 @@ import { PessoaFisicaOrmEntity } from '../../../adapters/repository/pessoaFisica
         username: configService.get<string>('database.username'),
         password: configService.get<string>('database.password'),
         database: configService.get<string>('database.database'),
-        entities: [LocatarioOrmEntity, PessoaFisicaOrmEntity],
+        entities: [
+          LocatarioOrmEntity,
+          PessoaFisicaOrmEntity,
+          PessoaJuridicaOrmEntity,
+        ],
         synchronize: true,
       }),
     }),

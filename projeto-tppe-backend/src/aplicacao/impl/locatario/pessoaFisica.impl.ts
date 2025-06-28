@@ -24,7 +24,7 @@ export class PessoaFisicaServiceImpl implements PessoaFisicaService {
     const locatarioDto: CriarLocatarioDto = {
       email,
       celular,
-      tipo: TipoLocatarioEnum.PESSOA_FISICA,
+      tipo: TipoLocatarioEnum.PESSOA_JURIDICA,
     };
 
     const locatarioEntity =
@@ -36,9 +36,6 @@ export class PessoaFisicaServiceImpl implements PessoaFisicaService {
       cpf: cpf,
     });
 
-    await this.pessoaFisicaRepository.save(pessoaFisicaEntity);
-    return await this.pessoaFisicaRepository.findOne({
-      where: { idLocatario: pessoaFisicaEntity.idLocatario },
-    });
+    return this.pessoaFisicaRepository.save(pessoaFisicaEntity);
   }
 }

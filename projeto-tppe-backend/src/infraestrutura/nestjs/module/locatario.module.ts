@@ -6,6 +6,7 @@ import { PessoaJuridicaOrmEntity } from '../../../adapters/repository/pessoaJuri
 import { LocatarioController } from '../../../adapters/controllers/locatario.controller';
 import { LocatarioServiceImpl } from '../../../aplicacao/impl/locatario/locatario.impl';
 import { PessoaFisicaServiceImpl } from '../../../aplicacao/impl/locatario/pessoaFisica.impl';
+import { PessoaJuridicaServiceImpl } from '../../../aplicacao/impl/locatario/pessoaJuridica.impl';
 
 @Module({
   imports: [
@@ -16,7 +17,11 @@ import { PessoaFisicaServiceImpl } from '../../../aplicacao/impl/locatario/pesso
     ]),
   ],
   controllers: [LocatarioController],
-  providers: [LocatarioServiceImpl, PessoaFisicaServiceImpl],
+  providers: [
+    LocatarioServiceImpl,
+    PessoaFisicaServiceImpl,
+    PessoaJuridicaServiceImpl,
+  ],
   exports: [],
 })
 export class LocatarioModule {}
