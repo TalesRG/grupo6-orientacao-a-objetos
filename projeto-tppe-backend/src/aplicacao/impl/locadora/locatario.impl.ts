@@ -1,0 +1,21 @@
+import { Injectable } from '@nestjs/common';
+import { LocadoraOrmEntity } from '../../../adapters/repository/locadoraOrm.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { LocadoraService } from '../../service/locadora/locadora.service';
+import { CriarLocadoraDto } from '../../service/locadora/dto/criarLocadora.dto';
+import { Repository } from 'typeorm';
+
+@Injectable()
+export class LocadoraServiceImpl implements LocadoraService {
+  constructor(
+    @InjectRepository(LocadoraOrmEntity)
+    private locadoraRepository: Repository<LocadoraOrmEntity>,
+  ) {}
+
+  async criarLocadora(
+    criarLocadora: CriarLocadoraDto,
+  ): Promise<LocadoraOrmEntity> {
+    const locadoraEntity = this.locadoraRepository.create(criarLocadora);
+    return this.locadoraRepository.save(locadoraEntity);
+  }
+}
