@@ -1,30 +1,19 @@
-import { Body, Controller, Post } from '@nestjs/common';
-import { PessoaFisicaServiceImpl } from '../../aplicacao/impl/locatario/pessoaFisica.impl';
-import { CriarLocatarioPessoaFisicaDto } from '../../aplicacao/service/locatario/dto/criarLocatarioPessoaFisica.dto';
+import { Body, Controller, Get, Post } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { PessoaJuridicaServiceImpl } from '../../aplicacao/impl/locatario/pessoaJuridica.impl';
-import { CriarLocatarioPessoaJuridicaDto } from '../../aplicacao/service/locatario/dto/criarLocatarioPessoaJuridica.dto';
+import { CriarLocatarioDto } from '../../aplicacao/service/locatario/dto/criarLocatario.dto';
+import { LocatarioServiceImpl } from '../../aplicacao/impl/locatario/locatario.impl';
 @ApiTags('Locatario')
 @Controller('locatario')
 export class LocatarioController {
-  constructor(
-    private pessoaFisicaService: PessoaFisicaServiceImpl,
-    private pessoaJuridicaService: PessoaJuridicaServiceImpl,
-  ) {}
+  constructor(private locatarioService: LocatarioServiceImpl) {}
 
-  @Post('/pessoa-fisica/cadastrar')
-  async cadastrarPessoaFisica(
-    @Body() pessoaFisicaDto: CriarLocatarioPessoaFisicaDto,
-  ) {
-    return await this.pessoaFisicaService.criarPessoaFisica(pessoaFisicaDto);
+  @Post('/cadastrar')
+  async cadastrarLocatario(@Body() locatarioDto: CriarLocatarioDto) {
+    return await this.locatarioService.criarLocatario(locatarioDto);
   }
 
-  @Post('/pessoa-juridica/cadastrar')
-  async cadastrarPessoaJuridica(
-    @Body() pessoaJuridicaDto: CriarLocatarioPessoaJuridicaDto,
-  ) {
-    return await this.pessoaJuridicaService.criarPessoaJuridica(
-      pessoaJuridicaDto,
-    );
+  @Get('/listar')
+  async listarLocatarios() {
+    return await this.locatarioService.listarLocatarios();
   }
 }

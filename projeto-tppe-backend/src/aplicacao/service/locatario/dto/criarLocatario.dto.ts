@@ -2,9 +2,23 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class CriarLocatarioDto {
   @ApiProperty()
-  email: string;
+  nome: string;
+
   @ApiProperty()
-  celular: string;
+  email: string;
+
+  @ApiProperty()
+  telefone: string;
+
   @ApiProperty()
   tipo: string;
+
+  @ApiProperty()
+  documento: string;
+
+  @ApiProperty()
+  endereco: string;
+
+  @ApiProperty()
+  status: string;
 }

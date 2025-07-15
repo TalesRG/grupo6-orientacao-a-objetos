@@ -1,27 +1,13 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { PessoaFisicaOrmEntity } from '../../../adapters/repository/pessoaFisicaOrm.entity';
 import { LocatarioOrmEntity } from '../../../adapters/repository/locatarioOrm.entity';
-import { PessoaJuridicaOrmEntity } from '../../../adapters/repository/pessoaJuridicaOrm.entity';
 import { LocatarioController } from '../../../adapters/controllers/locatario.controller';
 import { LocatarioServiceImpl } from '../../../aplicacao/impl/locatario/locatario.impl';
-import { PessoaFisicaServiceImpl } from '../../../aplicacao/impl/locatario/pessoaFisica.impl';
-import { PessoaJuridicaServiceImpl } from '../../../aplicacao/impl/locatario/pessoaJuridica.impl';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([
-      LocatarioOrmEntity,
-      PessoaJuridicaOrmEntity,
-      PessoaFisicaOrmEntity,
-    ]),
-  ],
+  imports: [TypeOrmModule.forFeature([LocatarioOrmEntity])],
   controllers: [LocatarioController],
-  providers: [
-    LocatarioServiceImpl,
-    PessoaFisicaServiceImpl,
-    PessoaJuridicaServiceImpl,
-  ],
+  providers: [LocatarioServiceImpl],
   exports: [],
 })
 export class LocatarioModule {}

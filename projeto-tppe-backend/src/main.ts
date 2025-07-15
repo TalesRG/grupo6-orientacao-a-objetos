@@ -11,10 +11,11 @@ async function bootstrap() {
     .setDescription('Documentação da API da locadora')
     .setVersion('1.0')
     .build();
-  console.log('Rodando na porta: ', process.env.PORT ?? 3000);
+  console.log('Rodando na porta: ', process.env.PORT ?? 3001);
 
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
-  await app.listen(process.env.PORT ?? 3000);
+  app.enableCors();
+  await app.listen(process.env.PORT ?? 3001);
 }
 bootstrap();

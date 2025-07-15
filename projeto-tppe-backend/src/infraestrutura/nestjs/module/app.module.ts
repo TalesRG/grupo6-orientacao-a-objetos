@@ -7,13 +7,11 @@ import { LocatarioModule } from './locatario.module';
 import { LocatarioOrmEntity } from '../../../adapters/repository/locatarioOrm.entity';
 import { PessoaFisicaOrmEntity } from '../../../adapters/repository/pessoaFisicaOrm.entity';
 import { PessoaJuridicaOrmEntity } from '../../../adapters/repository/pessoaJuridicaOrm.entity';
-import { LoadoraModule } from './locadora.module';
 import { LocadoraOrmEntity } from '../../../adapters/repository/locadoraOrm.entity';
 @Module({
   imports: [
     AdminModule,
     LocatarioModule,
-    LoadoraModule,
     ConfigModule.forRoot({
       isGlobal: true,
       load: [databaseConfig],

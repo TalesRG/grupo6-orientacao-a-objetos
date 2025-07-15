@@ -18,4 +18,8 @@ export class LocatarioServiceImpl implements LocatarioService {
     const locatario = this.locatarioRepository.create(locatarioDto);
     return await this.locatarioRepository.save(locatario);
   }
+
+  async listarLocatarios(): Promise<LocatarioOrmEntity[]> {
+    return await this.locatarioRepository.find();
+  }
 }
