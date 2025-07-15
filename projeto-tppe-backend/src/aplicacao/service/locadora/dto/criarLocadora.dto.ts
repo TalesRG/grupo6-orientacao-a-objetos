@@ -11,4 +11,6 @@ export class CriarLocadoraDto {
   email: string;
   @ApiProperty()
   endereco: string;
+  @ApiProperty({ default: 'Ativa' })
+  status: string;
 }

@@ -68,7 +68,6 @@ export default function LocatariosManager() {
         prev.map((loc) => (loc.id === editingLocatario.id ? { ...loc, ...formData, status: "Ativo" as const } : loc)),
       )
     } else {
-      // Criar novo locatário - US01
       const response = await api.post("/locatario/cadastrar", {...formData, status: "Ativo"})
       const novoLocatario: Locatario = response.data
 

@@ -18,4 +18,6 @@ export class LocadoraOrmEntity {
 
   @Column()
   endereco: string;
+  @Column()
+  status: string;
 }

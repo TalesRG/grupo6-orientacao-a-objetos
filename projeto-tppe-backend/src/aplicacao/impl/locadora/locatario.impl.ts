@@ -18,4 +18,8 @@ export class LocadoraServiceImpl implements LocadoraService {
     const locadoraEntity = this.locadoraRepository.create(criarLocadora);
     return this.locadoraRepository.save(locadoraEntity);
   }
+
+  async listarLocadoras(): Promise<LocadoraOrmEntity[]> {
+    return this.locadoraRepository.find();
+  }
 }

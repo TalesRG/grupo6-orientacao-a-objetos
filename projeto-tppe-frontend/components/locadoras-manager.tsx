@@ -1,6 +1,6 @@
 "use client"
 
-import type React from "react"
+import React, {useEffect} from "react"
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/dialog"
 import { Badge } from "@/components/ui/badge"
 import { Plus, Edit, MapPin } from "lucide-react"
+import api from "@/lib/api";
 
 interface Locadora {
   id: number
@@ -30,26 +31,20 @@ interface Locadora {
 }
 
 export default function LocadorasManager() {
-  const [locadoras, setLocadoras] = useState<Locadora[]>([
-    {
-      id: 1,
-      nome: "AutoRent Locadora",
-      cnpj: "12.345.678/0001-90",
-      email: "contato@autorent.com",
-      telefone: "(11) 3333-3333",
-      endereco: "Av. Paulista, 1000 - São Paulo/SP",
-      status: "Ativa",
-    },
-    {
-      id: 2,
-      nome: "VelocCar Aluguel",
-      cnpj: "98.765.432/0001-10",
-      email: "info@veloccar.com",
-      telefone: "(11) 4444-4444",
-      endereco: "Rua Augusta, 500 - São Paulo/SP",
-      status: "Ativa",
-    },
-  ])
+  const [locadoras, setLocadoras] = useState<Locadora[]>([])
+
+  useEffect(() => {
+    const fetchLocatarios = async () => {
+      try {
+        const response = await api.get("/locadora/listar") // ajuste conforme sua rota real
+        setLocadoras(response.data)
+      } catch (error) {
+        console.error("Erro ao buscar locatários:", error)
+      }
+    }
+
+    fetchLocatarios()
+  }, [])
 
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [editingLocadora, setEditingLocadora] = useState<Locadora | null>(null)
@@ -61,7 +56,7 @@ export default function LocadorasManager() {
     endereco: "",
   })
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
     if (editingLocadora) {
@@ -70,13 +65,10 @@ export default function LocadorasManager() {
         prev.map((loc) => (loc.id === editingLocadora.id ? { ...loc, ...formData, status: "Ativa" as const } : loc)),
       )
     } else {
-      // Criar nova locadora - US02
-      const newLocadora: Locadora = {
-        id: Date.now(),
-        ...formData,
-        status: "Ativa",
-      }
-      setLocadoras((prev) => [...prev, newLocadora])
+      const response = await api.post("/locatario/cadastrar", {...formData, status: "Ativo"})
+      const novoLocatario: Locadora = response.data
+
+      setLocadoras((prev) => [...prev, novoLocatario])
     }
 
     setIsDialogOpen(false)
