@@ -1,6 +1,6 @@
 "use client"
 
-import type React from "react"
+import React, {useEffect} from "react"
 import { Card, CardHeader, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { useState } from "react"
@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/dialog"
 import { Badge } from "@/components/ui/badge"
 import { Plus, Edit, Eye, MapPin } from "lucide-react"
+import api from "@/lib/api";
 
 interface Locatario {
   id: number
@@ -32,28 +33,20 @@ interface Locatario {
 }
 
 export default function LocatariosManager() {
-  const [locatarios, setLocatarios] = useState<Locatario[]>([
-    {
-      id: 1,
-      nome: "João Silva",
-      email: "joao@email.com",
-      telefone: "(11) 99999-9999",
-      tipo: "PF",
-      documento: "123.456.789-00",
-      endereco: "Rua A, 123 - São Paulo/SP",
-      status: "Ativo",
-    },
-    {
-      id: 2,
-      nome: "Empresa XYZ Ltda",
-      email: "contato@xyz.com",
-      telefone: "(11) 88888-8888",
-      tipo: "PJ",
-      documento: "12.345.678/0001-90",
-      endereco: "Av. B, 456 - São Paulo/SP",
-      status: "Ativo",
-    },
-  ])
+  const [locatarios, setLocatarios] = useState<Locatario[]>([])
+
+  useEffect(() => {
+    const fetchLocatarios = async () => {
+      try {
+        const response = await api.get("/locatario/listar") // ajuste conforme sua rota real
+        setLocatarios(response.data)
+      } catch (error) {
+        console.error("Erro ao buscar locatários:", error)
+      }
+    }
+
+    fetchLocatarios()
+  }, [])
 
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [editingLocatario, setEditingLocatario] = useState<Locatario | null>(null)
@@ -66,7 +59,7 @@ export default function LocatariosManager() {
     endereco: "",
   })
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
     if (editingLocatario) {
@@ -76,12 +69,10 @@ export default function LocatariosManager() {
       )
     } else {
       // Criar novo locatário - US01
-      const newLocatario: Locatario = {
-        id: Date.now(),
-        ...formData,
-        status: "Ativo",
-      }
-      setLocatarios((prev) => [...prev, newLocatario])
+      const response = await api.post("/locatario/cadastrar", {...formData, status: "Ativo"})
+      const novoLocatario: Locatario = response.data
+
+      setLocatarios((prev) => [...prev, novoLocatario])
     }
 
     setIsDialogOpen(false)
