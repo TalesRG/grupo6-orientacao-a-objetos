@@ -1,12 +1,13 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ReservaController } from '../../../adaptadores/repository/reserva.controller';
 import { ReservaOrmEntity } from '../../../adaptadores/repository/reservaOrm.entity';
+import { ReservaServiceImpl } from '../../../aplicacao/implementation/reserva.implemantation';
+import { ReservaController } from '../../../adaptadores/controllers/reserva.controller';
 
 @Module({
   imports: [TypeOrmModule.forFeature([ReservaOrmEntity])],
   controllers: [ReservaController],
-  providers: [],
+  providers: [ReservaServiceImpl],
   exports: [],
 })
 export default class ReservaModule {}

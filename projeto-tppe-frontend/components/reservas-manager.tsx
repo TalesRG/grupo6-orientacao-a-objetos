@@ -1,6 +1,6 @@
 "use client"
 
-import type React from "react"
+import React, {useEffect} from "react"
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -20,6 +20,7 @@ import {
 import { Badge } from "@/components/ui/badge"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Plus, Edit, Eye, Calculator } from "lucide-react"
+import api from "@/lib/api";
 
 interface Reserva {
   id: number
@@ -35,32 +36,7 @@ interface Reserva {
 }
 
 export default function ReservasManager() {
-  const [reservas, setReservas] = useState<Reserva[]>([
-    {
-      id: 1,
-      locatario: "João Silva",
-      locadora: "AutoRent Locadora",
-      veiculo: "Honda Civic 2023",
-      dataInicio: "2024-01-15",
-      dataFim: "2024-01-20",
-      valorBase: 150,
-      seguros: ["Seguro Total", "Proteção Terceiros"],
-      valorTotal: 950,
-      status: "Ativa",
-    },
-    {
-      id: 2,
-      locatario: "Empresa XYZ Ltda",
-      locadora: "VelocCar Aluguel",
-      veiculo: "Toyota Corolla 2023",
-      dataInicio: "2024-01-10",
-      dataFim: "2024-01-25",
-      valorBase: 120,
-      seguros: ["Seguro Básico"],
-      valorTotal: 1950,
-      status: "Ativa",
-    },
-  ])
+  const [reservas, setReservas] = useState<Reserva[]>([])
 
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [editingReserva, setEditingReserva] = useState<Reserva | null>(null)
@@ -75,6 +51,19 @@ export default function ReservasManager() {
     seguros: [] as string[],
     valorAdicional: 0,
   })
+
+  useEffect(() => {
+    const fetchLocatarios = async () => {
+      try {
+        const response = await api.get("/reserva/listar") // ajuste conforme sua rota real
+        setReservas(response.data)
+      } catch (error) {
+        console.error("Erro ao buscar locatários:", error)
+      }
+    }
+
+    fetchLocatarios()
+  }, [])
 
   const segurosDisponiveis = [
     "Seguro Básico",
@@ -98,27 +87,22 @@ export default function ReservasManager() {
     return total
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
     const valorTotal = calcularValorTotal()
 
     if (editingReserva) {
-      // Atualizar reserva existente - US04
       setReservas((prev) =>
         prev.map((res) =>
           res.id === editingReserva.id ? { ...res, ...formData, valorTotal, status: "Ativa" as const } : res,
         ),
       )
     } else {
-      // Criar nova reserva - US03
-      const newReserva: Reserva = {
-        id: Date.now(),
-        ...formData,
-        valorTotal,
-        status: "Ativa",
-      }
-      setReservas((prev) => [...prev, newReserva])
+      const response = await api.post("/reserva/cadastrar", {...formData, status: "Ativa",valorTotal : valorTotal})
+      const novoLocatario: Reserva = response.data
+
+      setReservas((prev) => [...prev, novoLocatario])
     }
 
     setIsDialogOpen(false)

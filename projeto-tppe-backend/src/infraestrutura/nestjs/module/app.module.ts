@@ -9,11 +9,14 @@ import { PessoaFisicaOrmEntity } from '../../../adaptadores/repository/pessoaFis
 import { PessoaJuridicaOrmEntity } from '../../../adaptadores/repository/pessoaJuridicaOrm.entity';
 import { LocadoraOrmEntity } from '../../../adaptadores/repository/locadoraOrm.entity';
 import { LocadoraModule } from './locadora.module';
+import ReservaModule from './reserva.module';
+import { ReservaOrmEntity } from '../../../adaptadores/repository/reservaOrm.entity';
 @Module({
   imports: [
     AdminModule,
     LocatarioModule,
     LocadoraModule,
+    ReservaModule,
     ConfigModule.forRoot({
       isGlobal: true,
       load: [databaseConfig],
@@ -28,12 +31,7 @@ import { LocadoraModule } from './locadora.module';
         username: configService.get<string>('database.username'),
         password: configService.get<string>('database.password'),
         database: configService.get<string>('database.database'),
-        entities: [
-          LocatarioOrmEntity,
-          PessoaFisicaOrmEntity,
-          PessoaJuridicaOrmEntity,
-          LocadoraOrmEntity,
-        ],
+        entities: [LocatarioOrmEntity, LocadoraOrmEntity, ReservaOrmEntity],
         synchronize: true,
       }),
     }),

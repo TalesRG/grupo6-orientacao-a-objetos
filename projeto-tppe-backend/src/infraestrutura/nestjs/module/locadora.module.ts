@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { LocadoraServiceImpl } from '../../../aplicacao/implementation/locadora.impl';
+import { LocadoraServiceImpl } from '../../../aplicacao/implementation/locadora.implematation';
 import { LocadoraController } from '../../../adaptadores/controllers/locadora.controller';
 import { LocadoraOrmEntity } from '../../../adaptadores/repository/locadoraOrm.entity';
 
