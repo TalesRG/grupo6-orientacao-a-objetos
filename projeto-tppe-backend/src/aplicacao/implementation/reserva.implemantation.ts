@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ReservaService } from '../service/reserva/reserva.service';
@@ -19,5 +19,16 @@ export class ReservaServiceImpl implements ReservaService {
 
   listarReservas(): Promise<ReservaOrmEntity[]> {
     return this.reservaRepository.find();
+  }
+
+  async cancelarReserva(id: number): Promise<void> {
+    const reserva = await this.reservaRepository.findOne({ where: { id } });
+
+    if (!reserva) {
+      throw new NotFoundException(`Reserva com ID ${id} não encontrada.`);
+    }
+
+    reserva.status = 'Cancelada';
+    await this.reservaRepository.save(reserva);
   }
 }

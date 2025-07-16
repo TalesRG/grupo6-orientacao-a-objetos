@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import {useEffect, useState} from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -9,6 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
 import { FileText, Download, Calendar, DollarSign, Users } from "lucide-react"
+import api from "@/lib/api";
 
 interface RelatorioReserva {
   id: number
@@ -32,44 +33,21 @@ export default function RelatoriosManager() {
     status: "Todos",
   })
 
-  const [reservasRelatorio] = useState<RelatorioReserva[]>([
-    {
-      id: 1,
-      locatario: "João Silva",
-      locadora: "AutoRent Locadora",
-      veiculo: "Honda Civic 2023",
-      dataInicio: "2024-01-15",
-      dataFim: "2024-01-20",
-      valorTotal: 950,
-      seguros: ["Seguro Total", "Proteção Terceiros"],
-      status: "Finalizada",
-      diasLocacao: 5,
-    },
-    {
-      id: 2,
-      locatario: "Empresa XYZ Ltda",
-      locadora: "VelocCar Aluguel",
-      veiculo: "Toyota Corolla 2023",
-      dataInicio: "2024-01-10",
-      dataFim: "2024-01-25",
-      valorTotal: 1950,
-      seguros: ["Seguro Básico"],
-      status: "Ativa",
-      diasLocacao: 15,
-    },
-    {
-      id: 3,
-      locatario: "Maria Santos",
-      locadora: "AutoRent Locadora",
-      veiculo: "Volkswagen Gol 2022",
-      dataInicio: "2024-01-05",
-      dataFim: "2024-01-12",
-      valorTotal: 630,
-      seguros: ["Seguro Básico", "Assistência 24h"],
-      status: "Finalizada",
-      diasLocacao: 7,
-    },
-  ])
+  const [reservasRelatorio,setReservasRelatorio] = useState<RelatorioReserva[]>([])
+
+  useEffect(() => {
+    const fetchLocatarios = async () => {
+      try {
+        const response = await api.get("/reserva/listar")
+        setReservasRelatorio(response.data)
+
+      } catch (error) {
+        console.error("Erro ao buscar locatários:", error)
+      }
+    }
+
+    fetchLocatarios()
+  }, [])
 
   const filtrarReservas = () => {
     return reservasRelatorio.filter((reserva) => {

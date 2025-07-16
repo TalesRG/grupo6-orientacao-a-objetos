@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post, Put } from '@nestjs/common';
 import { ReservaServiceImpl } from '../../aplicacao/implementation/reserva.implemantation';
 import { CriarReservaDto } from '../../aplicacao/service/reserva/dto/criarReserva.dto';
 
@@ -14,5 +14,10 @@ export class ReservaController {
   @Get('listar')
   listarReservas() {
     return this.reservaService.listarReservas();
+  }
+
+  @Put('cancelar/:id')
+  cancelarReserva(@Body('id') id: number) {
+    return this.reservaService.cancelarReserva(id);
   }
 }

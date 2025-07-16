@@ -5,8 +5,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AdminModule } from './admin.module';
 import { LocatarioModule } from './locatario.module';
 import { LocatarioOrmEntity } from '../../../adaptadores/repository/locatarioOrm.entity';
-import { PessoaFisicaOrmEntity } from '../../../adaptadores/repository/pessoaFisicaOrm.entity';
-import { PessoaJuridicaOrmEntity } from '../../../adaptadores/repository/pessoaJuridicaOrm.entity';
 import { LocadoraOrmEntity } from '../../../adaptadores/repository/locadoraOrm.entity';
 import { LocadoraModule } from './locadora.module';
 import ReservaModule from './reserva.module';

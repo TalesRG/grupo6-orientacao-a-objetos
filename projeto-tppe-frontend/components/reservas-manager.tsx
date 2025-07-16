@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/dialog"
 import { Badge } from "@/components/ui/badge"
 import { Checkbox } from "@/components/ui/checkbox"
-import { Plus, Edit, Eye, Calculator } from "lucide-react"
+import {Plus, Edit, Eye, Calculator, DeleteIcon, XCircle} from "lucide-react"
 import api from "@/lib/api";
 
 interface Reserva {
@@ -108,6 +108,15 @@ export default function ReservasManager() {
     setIsDialogOpen(false)
     setEditingReserva(null)
     resetForm()
+  }
+
+  const handleDelete = async (id: number) => {
+    try {
+      console.log(id)
+      await api.put(`/reserva/cancelar/${id}`) // ajuste conforme sua rota real
+    } catch (error) {
+      console.error("Erro ao cancelar reserva:", error)
+    }
   }
 
   const resetForm = () => {
@@ -395,8 +404,8 @@ export default function ReservasManager() {
                       <Button variant="outline" size="sm" onClick={() => openEditDialog(reserva)}>
                         <Edit className="h-4 w-4" />
                       </Button>
-                      <Button variant="outline" size="sm">
-                        <Eye className="h-4 w-4" />
+                      <Button variant="outline" size="sm" onClick={() => handleDelete(reserva.id)}>
+                        <XCircle  className="h-4 w-4" />
                       </Button>
                       <Button variant="outline" size="sm">
                         <Calculator className="h-4 w-4" />
