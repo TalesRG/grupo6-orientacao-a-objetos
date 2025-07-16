@@ -21,7 +21,7 @@ import { Badge } from "@/components/ui/badge"
 import { Plus, Edit, Eye, MapPin } from "lucide-react"
 import api from "@/lib/api";
 
-interface Locatario {
+export interface Locatario {
   id: number
   nome: string
   email?: string

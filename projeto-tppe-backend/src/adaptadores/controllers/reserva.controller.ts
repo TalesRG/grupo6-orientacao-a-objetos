@@ -20,4 +20,9 @@ export class ReservaController {
   cancelarReserva(@Body('id') id: number) {
     return this.reservaService.cancelarReserva(id);
   }
+
+  @Put('editar/:id')
+  editarReserva(@Body('id') id: number, @Body() reservaDto: CriarReservaDto) {
+    return this.reservaService.editarReserva(id, reservaDto);
+  }
 }

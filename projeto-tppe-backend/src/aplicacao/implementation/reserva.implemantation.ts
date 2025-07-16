@@ -31,4 +31,19 @@ export class ReservaServiceImpl implements ReservaService {
     reserva.status = 'Cancelada';
     await this.reservaRepository.save(reserva);
   }
+
+  async editarReserva(
+    id: number,
+    reservaDto: CriarReservaDto,
+  ): Promise<ReservaOrmEntity> {
+    const reserva = await this.reservaRepository.findOne({ where: { id } });
+
+    if (!reserva) {
+      throw new NotFoundException(`Reserva com ID ${id} não encontrada.`);
+    }
+
+    Object.assign(reserva, reservaDto);
+
+    return this.reservaRepository.save(reserva);
+  }
 }

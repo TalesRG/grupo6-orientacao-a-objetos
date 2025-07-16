@@ -21,6 +21,8 @@ import { Badge } from "@/components/ui/badge"
 import { Checkbox } from "@/components/ui/checkbox"
 import {Plus, Edit, Eye, Calculator, DeleteIcon, XCircle} from "lucide-react"
 import api from "@/lib/api";
+import {Locatario} from "@/components/locatarios-manager";
+import {Locadora} from "@/components/locadoras-manager";
 
 interface Reserva {
   id: number
@@ -37,6 +39,11 @@ interface Reserva {
 
 export default function ReservasManager() {
   const [reservas, setReservas] = useState<Reserva[]>([])
+  const [locatarios, setLocatarios] = useState<Locatario[]>([])
+  const [locadoras, setLocadoras] = useState<Locadora[]>([])
+
+  const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
+  const [reservaParaCancelar, setReservaParaCancelar] = useState<Reserva | null>(null);
 
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [editingReserva, setEditingReserva] = useState<Reserva | null>(null)
@@ -55,7 +62,14 @@ export default function ReservasManager() {
   useEffect(() => {
     const fetchLocatarios = async () => {
       try {
-        const response = await api.get("/reserva/listar") // ajuste conforme sua rota real
+        const response = await api.get("/reserva/listar")
+
+        const locatrarios = await api.get("/locatario/listar")
+
+        const locadoras = await api.get("/locadora/listar")
+
+        setLocadoras(locadoras.data)
+        setLocatarios(locatrarios.data)
         setReservas(response.data)
       } catch (error) {
         console.error("Erro ao buscar locatários:", error)
@@ -93,11 +107,21 @@ export default function ReservasManager() {
     const valorTotal = calcularValorTotal()
 
     if (editingReserva) {
-      setReservas((prev) =>
-        prev.map((res) =>
-          res.id === editingReserva.id ? { ...res, ...formData, valorTotal, status: "Ativa" as const } : res,
-        ),
-      )
+      try {
+        const response = await api.put(`/reserva/editar/${editingReserva.id}`, {
+          ...formData,
+          status: editingReserva.status,
+          valorTotal,
+        });
+
+        const reservaAtualizada: Reserva = response.data;
+
+        setReservas((prev) =>
+            prev.map((r) => (r.id === reservaAtualizada.id ? reservaAtualizada : r))
+        );
+      } catch (error) {
+        console.error("Erro ao editar reserva:", error);
+      }
     } else {
       const response = await api.post("/reserva/cadastrar", {...formData, status: "Ativa",valorTotal : valorTotal})
       const novoLocatario: Reserva = response.data
@@ -110,14 +134,29 @@ export default function ReservasManager() {
     resetForm()
   }
 
-  const handleDelete = async (id: number) => {
+  const confirmarCancelamento = (reserva: Reserva) => {
+    setReservaParaCancelar(reserva);
+    setConfirmDialogOpen(true);
+  };
+
+
+  const handleDelete = async () => {
+    if (!reservaParaCancelar) return;
+
     try {
-      console.log(id)
-      await api.put(`/reserva/cancelar/${id}`) // ajuste conforme sua rota real
+      await api.put(`/reserva/cancelar/${reservaParaCancelar.id}`);
+      setReservas((prev) =>
+          prev.map((r) =>
+              r.id === reservaParaCancelar.id ? { ...r, status: "Cancelada" } : r
+          )
+      );
     } catch (error) {
-      console.error("Erro ao cancelar reserva:", error)
+      console.error("Erro ao cancelar reserva:", error);
+    } finally {
+      setConfirmDialogOpen(false);
+      setReservaParaCancelar(null);
     }
-  }
+  };
 
   const resetForm = () => {
     setFormData({
@@ -212,8 +251,11 @@ export default function ReservasManager() {
                         <SelectValue placeholder="Selecione o locatário" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="João Silva">João Silva</SelectItem>
-                        <SelectItem value="Empresa XYZ Ltda">Empresa XYZ Ltda</SelectItem>
+                        {locatarios.map((locatario) => (
+                            <SelectItem key={locatario.id} value={locatario.nome}>
+                              {locatario.nome}
+                            </SelectItem>
+                        ))}
                       </SelectContent>
                     </Select>
                   </div>
@@ -227,8 +269,11 @@ export default function ReservasManager() {
                         <SelectValue placeholder="Selecione a locadora" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="AutoRent Locadora">AutoRent Locadora</SelectItem>
-                        <SelectItem value="VelocCar Aluguel">VelocCar Aluguel</SelectItem>
+                        {locadoras.map((locadora) => (
+                            <SelectItem key={locadora.id} value={locadora.nome}>
+                              {locadora.nome}
+                            </SelectItem>
+                        ))}
                       </SelectContent>
                     </Select>
                   </div>
@@ -320,6 +365,26 @@ export default function ReservasManager() {
         </Dialog>
       </div>
 
+      <Dialog open={confirmDialogOpen} onOpenChange={setConfirmDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Cancelar Reserva</DialogTitle>
+            <DialogDescription>
+              Tem certeza que deseja cancelar a reserva de <strong>{reservaParaCancelar?.locatario}</strong>?
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setConfirmDialogOpen(false)}>
+              Não
+            </Button>
+            <Button variant="destructive" onClick={handleDelete}>
+              Sim, Cancelar
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+
       {/* Busca por período - US11 */}
       <Card className="mb-6">
         <CardHeader>
@@ -404,11 +469,13 @@ export default function ReservasManager() {
                       <Button variant="outline" size="sm" onClick={() => openEditDialog(reserva)}>
                         <Edit className="h-4 w-4" />
                       </Button>
-                      <Button variant="outline" size="sm" onClick={() => handleDelete(reserva.id)}>
-                        <XCircle  className="h-4 w-4" />
-                      </Button>
-                      <Button variant="outline" size="sm">
-                        <Calculator className="h-4 w-4" />
+                      <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => confirmarCancelamento(reserva)}
+                          disabled={reserva.status !== "Ativa"}
+                      >
+                        <XCircle className="h-4 w-4" />
                       </Button>
                     </div>
                   </TableCell>
@@ -419,5 +486,6 @@ export default function ReservasManager() {
         </CardContent>
       </Card>
     </div>
+
   )
 }

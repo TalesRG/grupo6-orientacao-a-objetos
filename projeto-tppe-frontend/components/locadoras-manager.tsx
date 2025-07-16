@@ -20,7 +20,7 @@ import { Badge } from "@/components/ui/badge"
 import { Plus, Edit, MapPin } from "lucide-react"
 import api from "@/lib/api";
 
-interface Locadora {
+export interface Locadora {
   id: number
   nome: string
   cnpj: string
