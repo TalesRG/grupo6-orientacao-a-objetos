@@ -9,7 +9,6 @@ const menuItems = [
   { id: "/locatarios", label: "Locatários", icon: Users },
   { id: "/locadoras", label: "Locadoras", icon: Building2 },
   { id: "/reservas", label: "Reservas", icon: Calendar },
-  { id: "/pessoas", label: "Pessoas", icon: Users },
   { id: "/relatorios", label: "Relatórios", icon: FileText },
 ]
 

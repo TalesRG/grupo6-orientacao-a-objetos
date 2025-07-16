@@ -1,4 +1,4 @@
-import { PessoaJuridicaOrmEntity } from '../../../adapters/repository/pessoaJuridicaOrm.entity';
+import { PessoaJuridicaOrmEntity } from '../../../adaptadores/repository/pessoaJuridicaOrm.entity';
 import { CriarLocatarioPessoaJuridicaDto } from './dto/criarLocatarioPessoaJuridica.dto';
 
 export interface PessoaJuridicaService {

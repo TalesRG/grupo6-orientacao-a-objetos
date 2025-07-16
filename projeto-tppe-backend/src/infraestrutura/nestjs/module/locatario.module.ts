@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { LocatarioOrmEntity } from '../../../adapters/repository/locatarioOrm.entity';
-import { LocatarioController } from '../../../adapters/controllers/locatario.controller';
-import { LocatarioServiceImpl } from '../../../aplicacao/impl/locatario/locatario.impl';
+import { LocatarioOrmEntity } from '../../../adaptadores/repository/locatarioOrm.entity';
+import { LocatarioController } from '../../../adaptadores/controllers/locatario.controller';
+import { LocatarioServiceImpl } from '../../../aplicacao/implementation/locatario.impl';
 
 @Module({
   imports: [TypeOrmModule.forFeature([LocatarioOrmEntity])],

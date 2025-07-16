@@ -4,10 +4,10 @@ import databaseConfig from '../../database/database.config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AdminModule } from './admin.module';
 import { LocatarioModule } from './locatario.module';
-import { LocatarioOrmEntity } from '../../../adapters/repository/locatarioOrm.entity';
-import { PessoaFisicaOrmEntity } from '../../../adapters/repository/pessoaFisicaOrm.entity';
-import { PessoaJuridicaOrmEntity } from '../../../adapters/repository/pessoaJuridicaOrm.entity';
-import { LocadoraOrmEntity } from '../../../adapters/repository/locadoraOrm.entity';
+import { LocatarioOrmEntity } from '../../../adaptadores/repository/locatarioOrm.entity';
+import { PessoaFisicaOrmEntity } from '../../../adaptadores/repository/pessoaFisicaOrm.entity';
+import { PessoaJuridicaOrmEntity } from '../../../adaptadores/repository/pessoaJuridicaOrm.entity';
+import { LocadoraOrmEntity } from '../../../adaptadores/repository/locadoraOrm.entity';
 import { LocadoraModule } from './locadora.module';
 @Module({
   imports: [

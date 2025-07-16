@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Post } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { CriarLocatarioDto } from '../../aplicacao/service/locatario/dto/criarLocatario.dto';
-import { LocatarioServiceImpl } from '../../aplicacao/impl/locatario/locatario.impl';
+import { LocatarioServiceImpl } from '../../aplicacao/implementation/locatario.impl';
 @ApiTags('Locatario')
 @Controller('locatario')
 export class LocatarioController {

@@ -1,5 +1,5 @@
 import { CriarLocatarioPessoaFisicaDto } from './dto/criarLocatarioPessoaFisica.dto';
-import { PessoaFisicaOrmEntity } from '../../../adapters/repository/pessoaFisicaOrm.entity';
+import { PessoaFisicaOrmEntity } from '../../../adaptadores/repository/pessoaFisicaOrm.entity';
 
 export interface PessoaFisicaService {
   criarPessoaFisica(

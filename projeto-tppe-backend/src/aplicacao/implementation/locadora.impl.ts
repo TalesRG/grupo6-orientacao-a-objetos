@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
-import { LocadoraOrmEntity } from '../../../adapters/repository/locadoraOrm.entity';
+import { LocadoraOrmEntity } from '../../adaptadores/repository/locadoraOrm.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { LocadoraService } from '../../service/locadora/locadora.service';
-import { CriarLocadoraDto } from '../../service/locadora/dto/criarLocadora.dto';
+import { LocadoraService } from '../service/locadora/locadora.service';
+import { CriarLocadoraDto } from '../service/locadora/dto/criarLocadora.dto';
 import { Repository } from 'typeorm';
 
 @Injectable()
