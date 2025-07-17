@@ -5,6 +5,7 @@ import { CriarReservaDto } from '../../../src/aplicacao/service/reserva/dto/cria
 
 describe('ReservaController', () => {
   let controller: ReservaController;
+  // eslint-disable-next-line
   let service: ReservaServiceImpl;
 
   const mockService = {

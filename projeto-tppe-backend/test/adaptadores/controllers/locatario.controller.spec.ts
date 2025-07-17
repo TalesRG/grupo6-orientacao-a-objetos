@@ -5,6 +5,7 @@ import { CriarLocatarioDto } from '../../../src/aplicacao/service/locatario/dto/
 
 describe('LocatarioController', () => {
   let controller: LocatarioController;
+  // eslint-disable-next-line
   let service: LocatarioServiceImpl;
 
   const mockService = {
