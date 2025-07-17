@@ -19,10 +19,7 @@ jobs:
         with:
           node-version: '20'
           cache: 'yarn'
-
-      - name: 📁 Entra na pasta do backend
-        working-directory: projeto-tppe-backend
-        run: echo "Entrando na pasta do backend"
+          cache-dependency-path: projeto-tppe-backend/yarn.lock
 
       - name: 📦 Instala dependências
         working-directory: projeto-tppe-backend
@@ -32,10 +29,10 @@ jobs:
         working-directory: projeto-tppe-backend
         run: yarn lint
 
-      - name: 🛠️ Compila o projeto
+      - name: 🛠️ Build do projeto
         working-directory: projeto-tppe-backend
         run: yarn build
 
-      - name: 🧪 Roda os testes
+      - name: 🧪 Testes com cobertura
         working-directory: projeto-tppe-backend
         run: yarn test --ci --coverage
