@@ -1,22 +1,21 @@
-FROM node:18-alpine
+FROM node:20 AS builder
 
-# Diretório de trabalho dentro do container
-WORKDIR /usr/src/app
+WORKDIR /app
 
-# Copia apenas os arquivos necessários primeiro (melhora cache do Docker)
-COPY package*.json ./
-COPY tsconfig*.json ./
+COPY package.json yarn.lock ./
+RUN yarn install
 
-RUN npm install --quiet --no-optional --no-fund --loglevel=error
-
-# Agora copia o restante dos arquivos, incluindo tsconfig.json e src/
 COPY . .
 
-# Compila a aplicação NestJS
-RUN npm run build
+RUN yarn build
 
-# Expõe a porta do NestJS
-EXPOSE 3000
+# --- Runtime stage ---
+FROM node:20
 
-# Comando de execução
-CMD ["npm", "run", "start:prod"]
+WORKDIR /app
+
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/dist ./dist
+COPY package.json ./
+
+CMD ["node", "dist/main"]
