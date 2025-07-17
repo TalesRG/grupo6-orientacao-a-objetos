@@ -2,37 +2,34 @@ name: CI - NestJS Backend
 
 on:
   push:
-    branches: [main, develop]
+    branches: [main]
   pull_request:
-    branches: [main, develop]
+    branches: [main]
 
 jobs:
-  backend-ci:
+  build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: 📥 Checkout do código
+      - name: Checkout do código
         uses: actions/checkout@v3
 
-      - name: 🟦 Configura Node.js
+      - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '20'
-          cache: 'yarn'
-          cache-dependency-path: projeto-tppe-backend/yarn.lock
 
-      - name: 📦 Instala dependências
-        working-directory: projeto-tppe-backend
-        run: yarn install --frozen-lockfile
+      - name: Instala dependências
+        run: yarn install --cwd projeto-tppe-backend
 
-      - name: 🧹 Verifica lint
-        working-directory: projeto-tppe-backend
+      - name: Lint
         run: yarn lint
-
-      - name: 🛠️ Build do projeto
         working-directory: projeto-tppe-backend
+
+      - name: Build
         run: yarn build
-
-      - name: 🧪 Testes com cobertura
         working-directory: projeto-tppe-backend
-        run: yarn test --ci --coverage
+
+      - name: Testes
+        run: yarn test
+        working-directory: projeto-tppe-backend
