@@ -16,4 +16,9 @@ export class LocadoraController {
   async listarLocadoras() {
     return this.locadoraService.listarLocadoras();
   }
+
+  @Get('total/ativos')
+  async totalLocadoras() {
+    return this.locadoraService.totalLocadoras();
+  }
 }

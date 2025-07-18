@@ -22,4 +22,8 @@ export class LocatarioServiceImpl implements LocatarioService {
   async listarLocatarios(): Promise<LocatarioOrmEntity[]> {
     return await this.locatarioRepository.find();
   }
+
+  async totalLocatarios(): Promise<number> {
+    return await this.locatarioRepository.count();
+  }
 }

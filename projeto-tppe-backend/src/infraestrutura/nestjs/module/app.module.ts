@@ -31,12 +31,6 @@ import { ReservaOrmEntity } from '../../../adaptadores/repository/reservaOrm.ent
         database: configService.get<string>('database.database'),
         entities: [LocatarioOrmEntity, LocadoraOrmEntity, ReservaOrmEntity],
         synchronize: true,
-        ssl: {
-          rejectUnauthorized: false,
-        },
-        extra: {
-          ssl: true,
-        },
       }),
     }),
   ],

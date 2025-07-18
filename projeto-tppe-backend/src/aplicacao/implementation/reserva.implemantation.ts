@@ -46,4 +46,32 @@ export class ReservaServiceImpl implements ReservaService {
 
     return this.reservaRepository.save(reserva);
   }
+
+  async totalReservasAtivas(): Promise<number> {
+    return this.reservaRepository.count({ where: { status: 'Ativa' } });
+  }
+
+  async retornaReceitaMensal(): Promise<number> {
+    const reservas = await this.reservaRepository.find({
+      where: { status: 'Ativa' },
+      select: ['valorTotal', 'dataInicio'],
+    });
+
+    const agora = new Date();
+    const mesAtual = agora.getMonth();
+    const anoAtual = agora.getFullYear();
+
+    const receitaMensal = reservas.reduce((total, reserva) => {
+      const dataInicio = new Date(reserva.dataInicio);
+      if (
+        dataInicio.getMonth() === mesAtual &&
+        dataInicio.getFullYear() === anoAtual
+      ) {
+        return total + reserva.valorTotal;
+      }
+      return total;
+    }, 0);
+
+    return receitaMensal;
+  }
 }

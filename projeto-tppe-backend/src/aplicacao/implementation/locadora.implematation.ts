@@ -22,4 +22,8 @@ export class LocadoraServiceImpl implements LocadoraService {
   async listarLocadoras(): Promise<LocadoraOrmEntity[]> {
     return this.locadoraRepository.find();
   }
+
+  async totalLocadoras(): Promise<number> {
+    return this.locadoraRepository.count({ where: { status: 'Ativa' } });
+  }
 }

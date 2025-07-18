@@ -16,4 +16,9 @@ export class LocatarioController {
   async listarLocatarios() {
     return await this.locatarioService.listarLocatarios();
   }
+
+  @Get('/total/ativos')
+  async retornaTotadeLocatarios() {
+    return await this.locatarioService.totalLocatarios();
+  }
 }

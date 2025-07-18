@@ -1,7 +1,42 @@
+"use client"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Building2, Users, Calendar, FileText } from "lucide-react"
+import {useEffect, useState} from "react";
+import api from "@/lib/api";
 
 export default function DashboardPage() {
+
+  const [numeroLocatarios, setNumeroLocatarios] = useState<number>()
+  const [numeroLocadorasAtivas, setNumeroLocadorasAtivas] = useState<number>()
+  const [reservaAtivas, setReservaAtivas] = useState<number>()
+  const [receitaMensal, setReceitaMensal] = useState<number>()
+
+
+  useEffect(() => {
+    const fetchDashboard = async () => {
+      try {
+        const reservasAtivaResponse = await api.get("/reserva/total/ativos");
+        const locatariosResponse = await api.get("/locatario/total/ativos");
+        const locadorasAtivasResponse = await api.get("/locadora/total/ativos");
+        const receitaResponse = await api.get("/reserva/receitaMensal");
+
+        const reservasAtiva = reservasAtivaResponse.data;
+        const locatarios = locatariosResponse.data;
+        const locadorasAtivas = locadorasAtivasResponse.data;
+        const receita = receitaResponse.data;
+
+        setNumeroLocatarios(locatarios);
+        setNumeroLocadorasAtivas(locadorasAtivas);
+        setReservaAtivas(reservasAtiva);
+        setReceitaMensal(receita);
+
+      } catch (error) {
+        console.error("Erro ao buscar dados do dashboard:", error);
+      }
+    };
+
+    fetchDashboard();
+  }, []);
   return (
     <div>
       <h2 className="text-2xl font-bold mb-6">Dashboard</h2>
@@ -12,8 +47,7 @@ export default function DashboardPage() {
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">24</div>
-            <p className="text-xs text-muted-foreground">+2 desde o mês passado</p>
+            <div className="text-2xl font-bold">{String(numeroLocatarios)}</div>
           </CardContent>
         </Card>
         <Card>
@@ -22,8 +56,7 @@ export default function DashboardPage() {
             <Building2 className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">8</div>
-            <p className="text-xs text-muted-foreground">+1 nova este mês</p>
+            <div className="text-2xl font-bold">{numeroLocadorasAtivas}</div>
           </CardContent>
         </Card>
         <Card>
@@ -32,8 +65,7 @@ export default function DashboardPage() {
             <Calendar className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">12</div>
-            <p className="text-xs text-muted-foreground">3 finalizando hoje</p>
+            <div className="text-2xl font-bold">{reservaAtivas}</div>
           </CardContent>
         </Card>
         <Card>
@@ -42,8 +74,8 @@ export default function DashboardPage() {
             <FileText className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">R$ 45.231</div>
-            <p className="text-xs text-muted-foreground">+12% vs mês anterior</p>
+            <div className="text-2xl font-bold">${receitaMensal}</div>
+
           </CardContent>
         </Card>
       </div>

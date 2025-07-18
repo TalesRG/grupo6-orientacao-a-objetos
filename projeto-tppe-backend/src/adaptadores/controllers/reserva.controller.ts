@@ -7,22 +7,35 @@ export class ReservaController {
   constructor(private readonly reservaService: ReservaServiceImpl) {}
 
   @Post('cadastrar')
-  cadastrarReserva(@Body() reservaDto: CriarReservaDto) {
+  async cadastrarReserva(@Body() reservaDto: CriarReservaDto) {
     return this.reservaService.criarReserva(reservaDto);
   }
 
   @Get('listar')
-  listarReservas() {
+  async listarReservas() {
     return this.reservaService.listarReservas();
   }
 
   @Put('cancelar/:id')
-  cancelarReserva(@Param('id') id: number) {
+  async cancelarReserva(@Param('id') id: number) {
     return this.reservaService.cancelarReserva(id);
   }
 
   @Put('editar/:id')
-  editarReserva(@Param('id') id: number, @Body() reservaDto: CriarReservaDto) {
+  async editarReserva(
+    @Param('id') id: number,
+    @Body() reservaDto: CriarReservaDto,
+  ) {
     return this.reservaService.editarReserva(id, reservaDto);
+  }
+
+  @Get('total/ativos')
+  async totalReservasAtivas() {
+    return this.reservaService.totalReservasAtivas();
+  }
+
+  @Get('receitaMensal')
+  async receitaMensal() {
+    return this.reservaService.retornaReceitaMensal();
   }
 }
