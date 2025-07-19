@@ -158,14 +158,6 @@ export default function LocatariosManager() {
                       <Button variant="outline" size="sm" onClick={() => openEditDialog(locatario)}>
                         <Edit className="h-4 w-4" />
                       </Button>
-                      <Button variant="outline" size="sm">
-                        <Eye className="h-4 w-4" />
-                      </Button>
-                      {locatario.endereco && (
-                        <Button variant="outline" size="sm">
-                          <MapPin className="h-4 w-4" />
-                        </Button>
-                      )}
                     </div>
                   </TableCell>
                 </TableRow>

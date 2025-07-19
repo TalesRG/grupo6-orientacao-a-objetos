@@ -66,13 +66,11 @@ export default function RelatoriosManager() {
     const reservasFiltradas = filtrarReservas()
     const totalReservas = reservasFiltradas.length
     const valorTotal = reservasFiltradas.reduce((acc, reserva) => acc + reserva.valorTotal, 0)
-    const diasTotais = reservasFiltradas.reduce((acc, reserva) => acc + reserva.diasLocacao, 0)
     const ticketMedio = totalReservas > 0 ? valorTotal / totalReservas : 0
 
     return {
       totalReservas,
       valorTotal,
-      diasTotais,
       ticketMedio,
     }
   }
@@ -153,16 +151,6 @@ export default function RelatoriosManager() {
           <CardContent>
             <div className="text-2xl font-bold text-orange-600">R$ {estatisticas.valorTotal.toFixed(2)}</div>
             <p className="text-xs text-muted-foreground">Valor total das reservas</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Dias Totais</CardTitle>
-            <Calendar className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-orange-600">{estatisticas.diasTotais}</div>
-            <p className="text-xs text-muted-foreground">Dias de locação</p>
           </CardContent>
         </Card>
         <Card>
