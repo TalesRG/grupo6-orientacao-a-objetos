@@ -32,6 +32,17 @@ export class ReservaServiceImpl implements ReservaService {
     await this.reservaRepository.save(reserva);
   }
 
+  async finalizarReserva(id: number): Promise<void> {
+    const reserva = await this.reservaRepository.findOne({ where: { id } });
+
+    if (!reserva) {
+      throw new NotFoundException(`Reserva com ID ${id} não encontrada.`);
+    }
+
+    reserva.status = 'Finalizada';
+    await this.reservaRepository.save(reserva);
+  }
+
   async editarReserva(
     id: number,
     reservaDto: CriarReservaDto,

@@ -26,4 +26,12 @@ export class LocatarioServiceImpl implements LocatarioService {
   async totalLocatarios(): Promise<number> {
     return await this.locatarioRepository.count();
   }
+
+  async deleteLocatario(id: string): Promise<void> {
+    const locatario = await this.locatarioRepository.findOne({ where: { id } });
+    if (!locatario) {
+      throw new Error(`Locatario com ID ${id} não encontrado.`);
+    }
+    await this.locatarioRepository.remove(locatario);
+  }
 }

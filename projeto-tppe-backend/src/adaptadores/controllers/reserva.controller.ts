@@ -21,6 +21,11 @@ export class ReservaController {
     return this.reservaService.cancelarReserva(id);
   }
 
+  @Put('finalizar/:id')
+  async finalizarReserva(@Param('id') id: number) {
+    return this.reservaService.finalizarReserva(id);
+  }
+
   @Put('editar/:id')
   async editarReserva(
     @Param('id') id: number,

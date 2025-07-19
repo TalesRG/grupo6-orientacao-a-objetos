@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { CriarLocatarioDto } from '../../aplicacao/service/locatario/dto/criarLocatario.dto';
 import { LocatarioServiceImpl } from '../../aplicacao/implementation/locatario.implematation';
@@ -20,5 +20,10 @@ export class LocatarioController {
   @Get('/total/ativos')
   async retornaTotadeLocatarios() {
     return await this.locatarioService.totalLocatarios();
+  }
+
+  @Delete('/delete/:id')
+  async deleteLocatario(@Param('id') id: string) {
+    return await this.locatarioService.deleteLocatario(id);
   }
 }

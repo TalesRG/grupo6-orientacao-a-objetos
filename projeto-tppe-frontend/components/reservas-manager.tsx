@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/dialog"
 import { Badge } from "@/components/ui/badge"
 import { Checkbox } from "@/components/ui/checkbox"
-import {Plus, Edit, Eye, Calculator, DeleteIcon, XCircle} from "lucide-react"
+import {Plus, Edit, Eye, Calculator, DeleteIcon, XCircle, CheckCircle} from "lucide-react"
 import api from "@/lib/api";
 import {Locatario} from "@/components/locatarios-manager";
 import {Locadora} from "@/components/locadoras-manager";
@@ -44,6 +44,8 @@ export default function ReservasManager() {
 
   const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
   const [reservaParaCancelar, setReservaParaCancelar] = useState<Reserva | null>(null);
+  const [reservaParaFinalizar, setReservaParaFinalizar] = useState<Reserva | null>(null);
+  const [confimDialogFinishOpen, setConfimDialogFinishOpen] = useState(false);
 
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [editingReserva, setEditingReserva] = useState<Reserva | null>(null)
@@ -139,8 +141,13 @@ export default function ReservasManager() {
     setConfirmDialogOpen(true);
   };
 
+  const confirmarFinalizacao = (reserva: Reserva) => {
+    setReservaParaFinalizar(reserva);
+    setConfimDialogFinishOpen(true);
+  };
 
-  const handleDelete = async () => {
+
+  const handleCancel = async () => {
     if (!reservaParaCancelar) return;
 
     try {
@@ -157,6 +164,26 @@ export default function ReservasManager() {
       setReservaParaCancelar(null);
     }
   };
+
+  const handleFinish = async () => {
+    if (!reservaParaFinalizar) return;
+
+    try {
+      await api.put(`/reserva/finalizar/${reservaParaFinalizar.id}`);
+      setReservas((prev) =>
+          prev.map((r) =>
+              r.id === reservaParaFinalizar.id ? { ...r, status: "Finalizada" } : r
+          )
+      );
+    } catch (error) {
+      console.error("Erro ao Finalizar reserva:", error);
+    } finally {
+      setConfimDialogFinishOpen(false);
+      setReservaParaFinalizar(null);
+    }
+  };
+
+
 
   const resetForm = () => {
     setFormData({
@@ -377,7 +404,26 @@ export default function ReservasManager() {
             <Button variant="outline" onClick={() => setConfirmDialogOpen(false)}>
               Não
             </Button>
-            <Button variant="destructive" onClick={handleDelete}>
+            <Button variant="destructive" onClick={handleCancel}>
+              Sim, Cancelar
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={confimDialogFinishOpen} onOpenChange={setConfimDialogFinishOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Finalizar Reserva</DialogTitle>
+            <DialogDescription>
+              Tem certeza que deseja finalizar a reserva de <strong>{reservaParaCancelar?.locatario}</strong>?
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setConfimDialogFinishOpen(false)}>
+              Não
+            </Button>
+            <Button variant="destructive" onClick={handleFinish}>
               Sim, Cancelar
             </Button>
           </DialogFooter>
@@ -476,6 +522,15 @@ export default function ReservasManager() {
                           disabled={reserva.status !== "Ativa"}
                       >
                         <XCircle className="h-4 w-4" />
+                      </Button>
+
+                      <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => confirmarFinalizacao(reserva)}
+                          disabled={reserva.status !== "Ativa"}
+                      >
+                        <CheckCircle  className="h-4 w-4" />
                       </Button>
                     </div>
                   </TableCell>

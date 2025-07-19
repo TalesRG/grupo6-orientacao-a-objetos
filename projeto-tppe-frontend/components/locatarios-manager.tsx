@@ -18,7 +18,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 import { Badge } from "@/components/ui/badge"
-import { Plus, Edit, Eye, MapPin } from "lucide-react"
+import {Plus, Edit, Eye, MapPin, Trash} from "lucide-react"
 import api from "@/lib/api";
 
 export interface Locatario {
@@ -47,6 +47,15 @@ export default function LocatariosManager() {
 
     fetchLocatarios()
   }, [])
+
+  const  deleteLocadora = async (id: number) => {
+    try {
+      await api.delete(`/locatario/delete/${id}`)
+      setLocatarios((prev) => prev.filter((loc) => loc.id !== id))
+    } catch (error) {
+      console.error("Erro ao excluir locadora:", error)
+    }
+  }
 
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [editingLocatario, setEditingLocatario] = useState<Locatario | null>(null)
@@ -157,6 +166,9 @@ export default function LocatariosManager() {
                     <div className="flex space-x-2">
                       <Button variant="outline" size="sm" onClick={() => openEditDialog(locatario)}>
                         <Edit className="h-4 w-4" />
+                      </Button>
+                      <Button variant="outline" size="sm" onClick={() => deleteLocadora(locatario.id)}>
+                        <Trash className="h-4 w-4" />
                       </Button>
                     </div>
                   </TableCell>
