@@ -2,7 +2,7 @@
 
 Você pode visualizar o diagrama de classes completo do sistema pelo link abaixo:
 
-🔗 [Clique para abrir o Diagrama de Classes no Lucidchart](https://lucid.app/lucidchart/d6643c76-86ab-4c1b-a639-69be02f4a5dd/edit?viewport_loc=-1204%2C-369%2C3606%2C1748%2C0_0&invitationId=inv_9aa055db-147c-4e8b-a20f-ce97665ba3bf)
+🔗 [Clique para abrir o Diagrama de Classes no Lucidchart](https://lucid.app/lucidchart/38120db3-03a2-4ecb-931f-92eddae007f7/edit?viewport_loc=-2239%2C-893%2C7166%2C3472%2C0_0&invitationId=inv_c3797e39-7c6d-43a8-b422-502a9cc7dfd2)
 
 ---
 
