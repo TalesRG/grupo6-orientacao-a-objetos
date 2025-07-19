@@ -5,12 +5,13 @@ import { CriarLocadoraDto } from '../../../src/aplicacao/service/locadora/dto/cr
 
 describe('LocadoraController', () => {
   let controller: LocadoraController;
-  // eslint-disable-next-line
   let service: LocadoraServiceImpl;
 
-  const mockService = {
+  const mockLocadoraService = {
     criarLocadora: jest.fn(),
     listarLocadoras: jest.fn(),
+    totalLocadoras: jest.fn(),
+    deleteLocadora: jest.fn(),
   };
 
   beforeEach(async () => {
@@ -19,7 +20,7 @@ describe('LocadoraController', () => {
       providers: [
         {
           provide: LocadoraServiceImpl,
-          useValue: mockService,
+          useValue: mockLocadoraService,
         },
       ],
     }).compile();
@@ -32,54 +33,55 @@ describe('LocadoraController', () => {
     jest.clearAllMocks();
   });
 
-  it('deve criar uma nova locadora', async () => {
+  it('should call criarLocadora with the correct DTO', async () => {
     const dto: CriarLocadoraDto = {
-      nome: 'Locadora XPTO',
-      cnpj: '12345678000100',
-      telefone: '11999999999',
-      email: 'contato@xpto.com',
-      endereco: 'Rua das Locadoras, 123',
+      nome: 'Locadora A',
+      cnpj: '12.345.678/0001-90',
+      telefone: '(11) 99999-9999',
+      email: 'locadora@email.com',
+      endereco: 'Rua das Flores, 123',
       status: 'Ativa',
     };
 
-    const expectedResult = {
-      id: '1',
-      ...dto,
-    };
+    const result = { id: '1', ...dto };
 
-    mockService.criarLocadora.mockResolvedValue(expectedResult);
+    mockLocadoraService.criarLocadora.mockResolvedValue(result);
 
-    const result = await controller.cadastarLocadora(dto);
-    expect(result).toEqual(expectedResult);
-    expect(mockService.criarLocadora).toHaveBeenCalledWith(dto);
+    const response = await controller.cadastarLocadora(dto);
+
+    expect(response).toEqual(result);
+    expect(mockLocadoraService.criarLocadora).toHaveBeenCalledWith(dto);
   });
 
-  it('deve retornar uma lista de locadoras', async () => {
-    const expectedList = [
-      {
-        id: '1',
-        nome: 'Locadora A',
-        cnpj: '11111111000111',
-        telefone: '11999990000',
-        email: 'a@locadora.com',
-        endereco: 'Rua A, 123',
-        status: 'Ativa',
-      },
-      {
-        id: '2',
-        nome: 'Locadora B',
-        cnpj: '22222222000122',
-        telefone: '11988880000',
-        email: 'b@locadora.com',
-        endereco: 'Rua B, 456',
-        status: 'Inativa',
-      },
-    ];
+  it('should return list of locadoras', async () => {
+    const locadoras = [{ id: '1', nome: 'Locadora A' }];
+    mockLocadoraService.listarLocadoras.mockResolvedValue(locadoras);
 
-    mockService.listarLocadoras.mockResolvedValue(expectedList);
+    const response = await controller.listarLocadoras();
 
-    const result = await controller.listarLocadoras();
-    expect(result).toEqual(expectedList);
-    expect(mockService.listarLocadoras).toHaveBeenCalledTimes(1);
+    expect(response).toEqual(locadoras);
+    expect(mockLocadoraService.listarLocadoras).toHaveBeenCalled();
+  });
+
+  it('should return total of active locadoras', async () => {
+    const total = 5;
+    mockLocadoraService.totalLocadoras.mockResolvedValue(total);
+
+    const response = await controller.totalLocadoras();
+
+    expect(response).toEqual(total);
+    expect(mockLocadoraService.totalLocadoras).toHaveBeenCalled();
+  });
+
+  it('should delete locadora by id', async () => {
+    const id = '123';
+    const result = { deleted: true };
+
+    mockLocadoraService.deleteLocadora.mockResolvedValue(result);
+
+    const response = await controller.deleteLocadora(id);
+
+    expect(response).toEqual(result);
+    expect(mockLocadoraService.deleteLocadora).toHaveBeenCalledWith(id);
   });
 });

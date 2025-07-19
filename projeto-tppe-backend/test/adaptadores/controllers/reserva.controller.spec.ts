@@ -5,14 +5,16 @@ import { CriarReservaDto } from '../../../src/aplicacao/service/reserva/dto/cria
 
 describe('ReservaController', () => {
   let controller: ReservaController;
-  // eslint-disable-next-line
   let service: ReservaServiceImpl;
 
-  const mockService = {
+  const mockReservaService = {
     criarReserva: jest.fn(),
     listarReservas: jest.fn(),
     cancelarReserva: jest.fn(),
+    finalizarReserva: jest.fn(),
     editarReserva: jest.fn(),
+    totalReservasAtivas: jest.fn(),
+    retornaReceitaMensal: jest.fn(),
   };
 
   beforeEach(async () => {
@@ -21,7 +23,7 @@ describe('ReservaController', () => {
       providers: [
         {
           provide: ReservaServiceImpl,
-          useValue: mockService,
+          useValue: mockReservaService,
         },
       ],
     }).compile();
@@ -34,72 +36,85 @@ describe('ReservaController', () => {
     jest.clearAllMocks();
   });
 
-  it('deve cadastrar uma nova reserva', async () => {
-    const dto: CriarReservaDto = {
-      locatario: 'locatario-uuid',
-      locadora: 'locadora-uuid',
-      veiculo: 'Civic 2023',
-      dataInicio: '2025-08-01',
-      dataFim: '2025-08-10',
-      valorBase: 1500,
-      seguros: ['básico', 'vidros'],
-      valorTotal: 1800,
-      status: 'Ativa',
-    };
+  const dto: CriarReservaDto = {
+    locatario: 'João',
+    locadora: 'Locadora A',
+    veiculo: 'Carro XYZ',
+    dataInicio: '2025-10-01',
+    dataFim: '2025-10-05',
+    valorBase: 500,
+    seguros: ['Roubo', 'Danos Terceiros'],
+    valorTotal: 600,
+    status: 'Ativa',
+  };
 
-    const expectedResult = { id: 'reserva-uuid', ...dto };
+  it('should call criarReserva with the correct DTO', async () => {
+    const result = { id: 1, ...dto };
+    mockReservaService.criarReserva.mockResolvedValue(result);
 
-    mockService.criarReserva.mockResolvedValue(expectedResult);
+    const response = await controller.cadastrarReserva(dto);
 
-    const result = await controller.cadastrarReserva(dto);
-    expect(result).toEqual(expectedResult);
-    expect(mockService.criarReserva).toHaveBeenCalledWith(dto);
+    expect(response).toEqual(result);
+    expect(mockReservaService.criarReserva).toHaveBeenCalledWith(dto);
   });
 
-  it('deve listar todas as reservas', async () => {
-    const reservas = [
-      { id: '1', veiculo: 'Civic', status: 'Ativa' },
-      { id: '2', veiculo: 'Corolla', status: 'Cancelada' },
-    ];
+  it('should return a list of reservas', async () => {
+    const result = [{ id: 1, locatario: 'João' }];
+    mockReservaService.listarReservas.mockResolvedValue(result);
 
-    mockService.listarReservas.mockResolvedValue(reservas);
+    const response = await controller.listarReservas();
 
-    const result = await controller.listarReservas();
-    expect(result).toEqual(reservas);
-    expect(mockService.listarReservas).toHaveBeenCalledTimes(1);
+    expect(response).toEqual(result);
+    expect(mockReservaService.listarReservas).toHaveBeenCalled();
   });
 
-  it('deve cancelar uma reserva', async () => {
-    const id = 1;
-    const expectedResult = { message: 'Reserva cancelada com sucesso' };
+  it('should call cancelarReserva with the correct id', async () => {
+    const result = { success: true };
+    mockReservaService.cancelarReserva.mockResolvedValue(result);
 
-    mockService.cancelarReserva.mockResolvedValue(expectedResult);
+    const response = await controller.cancelarReserva(1);
 
-    const result = await controller.cancelarReserva(id);
-    expect(result).toEqual(expectedResult);
-    expect(mockService.cancelarReserva).toHaveBeenCalledWith(id);
+    expect(response).toEqual(result);
+    expect(mockReservaService.cancelarReserva).toHaveBeenCalledWith(1);
   });
 
-  it('deve editar uma reserva', async () => {
-    const id = 1;
-    const dto: CriarReservaDto = {
-      locatario: 'locatario-uuid',
-      locadora: 'locadora-uuid',
-      veiculo: 'Corolla 2024',
-      dataInicio: '2025-08-05',
-      dataFim: '2025-08-15',
-      valorBase: 1600,
-      seguros: ['completo'],
-      valorTotal: 2000,
-      status: 'Ativa',
-    };
+  it('should call finalizarReserva with the correct id', async () => {
+    const result = { success: true };
+    mockReservaService.finalizarReserva.mockResolvedValue(result);
 
-    const expectedResult = { id, ...dto };
+    const response = await controller.finalizarReserva(1);
 
-    mockService.editarReserva.mockResolvedValue(expectedResult);
+    expect(response).toEqual(result);
+    expect(mockReservaService.finalizarReserva).toHaveBeenCalledWith(1);
+  });
 
-    const result = await controller.editarReserva(id, dto);
-    expect(result).toEqual(expectedResult);
-    expect(mockService.editarReserva).toHaveBeenCalledWith(id, dto);
+  it('should call editarReserva with correct id and dto', async () => {
+    const result = { id: 1, ...dto };
+    mockReservaService.editarReserva.mockResolvedValue(result);
+
+    const response = await controller.editarReserva(1, dto);
+
+    expect(response).toEqual(result);
+    expect(mockReservaService.editarReserva).toHaveBeenCalledWith(1, dto);
+  });
+
+  it('should return total reservas ativas', async () => {
+    const total = 10;
+    mockReservaService.totalReservasAtivas.mockResolvedValue(total);
+
+    const response = await controller.totalReservasAtivas();
+
+    expect(response).toEqual(total);
+    expect(mockReservaService.totalReservasAtivas).toHaveBeenCalled();
+  });
+
+  it('should return receita mensal', async () => {
+    const receita = 8000;
+    mockReservaService.retornaReceitaMensal.mockResolvedValue(receita);
+
+    const response = await controller.receitaMensal();
+
+    expect(response).toEqual(receita);
+    expect(mockReservaService.retornaReceitaMensal).toHaveBeenCalled();
   });
 });

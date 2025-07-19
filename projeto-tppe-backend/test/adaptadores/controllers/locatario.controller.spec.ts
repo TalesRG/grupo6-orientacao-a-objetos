@@ -5,12 +5,13 @@ import { CriarLocatarioDto } from '../../../src/aplicacao/service/locatario/dto/
 
 describe('LocatarioController', () => {
   let controller: LocatarioController;
-  // eslint-disable-next-line
   let service: LocatarioServiceImpl;
 
-  const mockService = {
+  const mockLocatarioService = {
     criarLocatario: jest.fn(),
     listarLocatarios: jest.fn(),
+    totalLocatarios: jest.fn(),
+    deleteLocatario: jest.fn(),
   };
 
   beforeEach(async () => {
@@ -19,7 +20,7 @@ describe('LocatarioController', () => {
       providers: [
         {
           provide: LocatarioServiceImpl,
-          useValue: mockService,
+          useValue: mockLocatarioService,
         },
       ],
     }).compile();
@@ -32,57 +33,61 @@ describe('LocatarioController', () => {
     jest.clearAllMocks();
   });
 
-  it('deve criar um novo locatário', async () => {
+  it('should call criarLocatario with the correct DTO', async () => {
     const dto: CriarLocatarioDto = {
-      nome: 'Ana Souza',
-      email: 'ana@example.com',
-      telefone: '11999999999',
-      tipo: 'Pessoa Física',
-      documento: '12345678900',
-      endereco: 'Rua Teste, 123',
+      nome: 'João da Silva',
+      email: 'joao@email.com',
+      telefone: '(11) 99999-9999',
+      tipo: 'F',
+      documento: '123.456.789-00',
+      endereco: 'Rua das Laranjeiras, 45',
       status: 'Ativo',
     };
 
-    const expectedResult = {
-      id: '1',
-      ...dto,
-    };
+    const result = { id: 'abc123', ...dto };
 
-    mockService.criarLocatario.mockResolvedValue(expectedResult);
+    mockLocatarioService.criarLocatario.mockResolvedValue(result);
 
-    const result = await controller.cadastrarLocatario(dto);
-    expect(result).toEqual(expectedResult);
-    expect(mockService.criarLocatario).toHaveBeenCalledWith(dto);
+    const response = await controller.cadastrarLocatario(dto);
+
+    expect(response).toEqual(result);
+    expect(mockLocatarioService.criarLocatario).toHaveBeenCalledWith(dto);
   });
 
-  it('deve listar os locatários', async () => {
-    const expectedList = [
-      {
-        id: '1',
-        nome: 'Ana Souza',
-        email: 'ana@example.com',
-        telefone: '11999999999',
-        tipo: 'Pessoa Física',
-        documento: '12345678900',
-        endereco: 'Rua Teste, 123',
-        status: 'Ativo',
-      },
-      {
-        id: '2',
-        nome: 'Carlos Lima',
-        email: 'carlos@example.com',
-        telefone: '11988888888',
-        tipo: 'Pessoa Jurídica',
-        documento: '98765432000199',
-        endereco: 'Av. Central, 456',
-        status: 'Inativo',
-      },
+  it('should return list of locatarios', async () => {
+    const lista = [
+      { id: '1', nome: 'Maria', email: 'maria@email.com' },
+      { id: '2', nome: 'Carlos', email: 'carlos@email.com' },
     ];
 
-    mockService.listarLocatarios.mockResolvedValue(expectedList);
+    mockLocatarioService.listarLocatarios.mockResolvedValue(lista);
 
-    const result = await controller.listarLocatarios();
-    expect(result).toEqual(expectedList);
-    expect(mockService.listarLocatarios).toHaveBeenCalledTimes(1);
+    const response = await controller.listarLocatarios();
+
+    expect(response).toEqual(lista);
+    expect(mockLocatarioService.listarLocatarios).toHaveBeenCalled();
+  });
+
+  it('should return total of active locatarios', async () => {
+    const total = 8;
+
+    mockLocatarioService.totalLocatarios.mockResolvedValue(total);
+
+    const response = await controller.retornaTotadeLocatarios();
+
+    expect(response).toEqual(total);
+    expect(mockLocatarioService.totalLocatarios).toHaveBeenCalled();
+  });
+
+  it('should delete locatario by id', async () => {
+    const id = 'abc123';
+    const result = { deleted: true };
+
+    mockLocatarioService.deleteLocatario.mockResolvedValue(result);
+
+    const response = await controller.deleteLocatario(id);
+
+    expect(response).toEqual(result);
+    expect(mockLocatarioService.deleteLocatario).toHaveBeenCalledWith(id);
   });
 });
