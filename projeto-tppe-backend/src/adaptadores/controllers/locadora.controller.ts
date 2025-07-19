@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
 import { LocadoraServiceImpl } from '../../aplicacao/implementation/locadora.implematation';
 import { CriarLocadoraDto } from '../../aplicacao/service/locadora/dto/criarLocadora.dto';
 import { ApiTags } from '@nestjs/swagger';
@@ -20,5 +20,10 @@ export class LocadoraController {
   @Get('total/ativos')
   async totalLocadoras() {
     return this.locadoraService.totalLocadoras();
+  }
+
+  @Delete('delete/:id')
+  async deleteLocadora(@Param('id') id: string) {
+    return this.locadoraService.deleteLocadora(id);
   }
 }

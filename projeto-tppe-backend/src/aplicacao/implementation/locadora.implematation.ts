@@ -26,4 +26,12 @@ export class LocadoraServiceImpl implements LocadoraService {
   async totalLocadoras(): Promise<number> {
     return this.locadoraRepository.count({ where: { status: 'Ativa' } });
   }
+
+  async deleteLocadora(id: string): Promise<void> {
+    const locadora = await this.locadoraRepository.findOne({ where: { id } });
+    if (!locadora) {
+      throw new Error(`Locadora com ID ${id} não encontrada.`);
+    }
+    await this.locadoraRepository.remove(locadora);
+  }
 }
