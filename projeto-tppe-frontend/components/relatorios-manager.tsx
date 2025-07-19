@@ -123,7 +123,7 @@ export default function RelatoriosManager() {
       <div className="flex justify-between items-center mb-6">
         <div>
           <h2 className="text-2xl font-bold">Relatórios</h2>
-          <p className="text-muted-foreground">Visualize relatórios detalhados das reservas - US06</p>
+          <p className="text-muted-foreground">Visualize relatórios detalhados das reservas</p>
         </div>
         <Button onClick={exportarRelatorio}>
           <Download className="mr-2 h-4 w-4" />

@@ -376,7 +376,7 @@ export default function ReservasManager() {
                 </div>
                 <div className="p-4 bg-gray-50 rounded-lg">
                   <div className="flex items-center justify-between">
-                    <span className="font-medium">Valor Total Calculado - US07:</span>
+                    <span className="font-medium">Valor Total Calculado:</span>
                     <span className="text-lg font-bold text-green-600">R$ {calcularValorTotal().toFixed(2)}</span>
                   </div>
                 </div>
