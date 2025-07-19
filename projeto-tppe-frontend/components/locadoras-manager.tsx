@@ -65,7 +65,7 @@ export default function LocadorasManager() {
         prev.map((loc) => (loc.id === editingLocadora.id ? { ...loc, ...formData, status: "Ativa" as const } : loc)),
       )
     } else {
-      const response = await api.post("/locadora/cadastrar", {...formData, status: "Ativo"})
+      const response = await api.post("/locadora/cadastrar", {...formData, status: "Ativa"})
       const novoLocatario: Locadora = response.data
 
       setLocadoras((prev) => [...prev, novoLocatario])
